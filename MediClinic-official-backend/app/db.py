@@ -1,8 +1,11 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# PostgreSQL database connection
-DATABASE_URL = "postgresql+asyncpg://postgres:iyad1212@localhost:5432/mediclinic"
+# Use DATABASE_URL env var in production, fallback to local for development
+_db_url = os.environ.get("DATABASE_URL", "postgresql+asyncpg://postgres:iyad1212@localhost:5432/mediclinic")
+# Render provides postgresql:// but asyncpg requires postgresql+asyncpg://
+DATABASE_URL = _db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
