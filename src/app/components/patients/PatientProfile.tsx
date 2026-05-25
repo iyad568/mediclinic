@@ -248,16 +248,21 @@ export function PatientProfile() {
 
   // Fetch image with authentication when file viewer is opened for an image
   useEffect(() => {
+    if (!showFileViewer) return;
+
+    let objectUrl = "";
+
     const fetchImage = async () => {
       if (selectedFile?.id && selectedFile.file_type.toLowerCase().startsWith('image/') && patient?.id) {
         try {
           const response = await fetch(patientsService.getFileUrl(patient.id, selectedFile.id), {
             headers: { 'Authorization': `Bearer ${token}` }
           });
-          
+
           if (response.ok) {
             const blob = await response.blob();
-            setImageSrc(URL.createObjectURL(blob));
+            objectUrl = URL.createObjectURL(blob);
+            setImageSrc(objectUrl);
             setImgError(false);
           } else {
             console.error('Failed to fetch image:', response.status);
@@ -269,18 +274,17 @@ export function PatientProfile() {
         }
       }
     };
-    
+
     if (selectedFile) {
       fetchImage();
     }
-    
-    // Cleanup blob URL when component unmounts or file changes
+
     return () => {
-      if (imageSrc) {
-        URL.revokeObjectURL(imageSrc);
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
       }
     };
-  }, [selectedFile?.id, patient?.id, token]);
+  }, [selectedFile?.id, patient?.id, token, showFileViewer]);
 
   const handleDeleteFile = async (fileId: number) => {
     if (!confirm('Are you sure you want to delete this file?')) return;

@@ -200,16 +200,20 @@ app = FastAPI(
 )
 
 # Typical Vite port 5173; credentials + wildcard origin is invalid in browsers — list dev origins explicitly.
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",")
+DEFAULT_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "file://",
+    "app://",
+]
+all_origins = list(set(DEFAULT_ORIGINS + [o.strip() for o in ALLOWED_ORIGINS if o.strip()]))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "file://",  # For Electron production builds
-        "app://",   # For Electron with custom protocol
-    ],
+    allow_origins=all_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
