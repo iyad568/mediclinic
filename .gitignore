@@ -12,6 +12,8 @@ installer/
 # Environment variables
 .env
 .env.local
+.env.production
+.env.staging
 .env.*.local
 
 # Python
