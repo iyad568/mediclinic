@@ -18,6 +18,8 @@ services:
           property: connectionString
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
 
   - type: web
     name: mediclinic-frontend
