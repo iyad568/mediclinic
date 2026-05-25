@@ -24,7 +24,7 @@ services:
   - type: web
     name: mediclinic-frontend
     runtime: static
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --ignore-optional && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
