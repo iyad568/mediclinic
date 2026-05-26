@@ -20,6 +20,11 @@ services:
         value: 3.11.0
       - key: SECRET_KEY
         generateValue: true
+      - key: ALLOWED_ORIGINS
+        fromService:
+          name: mediclinic-frontend
+          type: web
+          property: url
 
   - type: web
     name: mediclinic-frontend
@@ -31,4 +36,4 @@ services:
         fromService:
           name: mediclinic-backend
           type: web
-          property: host
+          property: url
